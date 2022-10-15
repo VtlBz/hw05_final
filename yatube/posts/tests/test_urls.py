@@ -91,7 +91,7 @@ class PostsURLTests(TestCase):
         """Страницы требующие авторизации перенаправят анонимного пользователя
         на страницу логина."""
         urls = (
-            '/posts/create/',
+            '/create/',
             f'/posts/{self.post.pk}/edit/',
             f'/posts/{self.post.pk}/comment/',
             '/follow/',
@@ -117,7 +117,7 @@ class PostsURLTests(TestCase):
             '/': 'posts/index.html',
             f'/group/{self.group.slug}/': 'posts/group_list.html',
             f'/profile/{self.user_not_author.username}/': 'posts/profile.html',
-            '/posts/create/': 'posts/create_post.html',
+            '/create/': 'posts/create_post.html',
             f'/posts/{self.post.pk}/': 'posts/post_detail.html',
             f'/posts/{self.post.pk}/edit/': 'posts/create_post.html',
             '/follow/': 'posts/follow.html',
