@@ -1,0 +1,19 @@
+<div class="media mb-4">
+  <div class="media-body">
+    <ul class="list-inline list-group-horizontal">
+      <li class="list-inline-item">
+        <h5 class="mt-0 display:inline">
+          <a href="{% url 'posts:profile' comment.author.username %}">
+          {{ comment.author }}
+          </a>
+        </h5>
+      </li>
+      <li class="list-inline-item">
+        <span class="display:inline">{{ comment.created|date:"d E Y" }}</span>
+      </li>
+    </ul>
+    <p>
+      {{ comment.text }}
+    </p>
+  </div>
+</div>

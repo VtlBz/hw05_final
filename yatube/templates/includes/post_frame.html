@@ -1,0 +1,29 @@
+{% load thumbnail %}
+<article>
+  <ul>
+    <li>
+      Автор: {{ post.author.get_full_name }}
+    </li>
+    <li>
+      Дата публикации: {{ post.pub_date|date:"d E Y" }}
+    </li>
+  </ul>
+  <p>
+    {% thumbnail post.image image_size crop="center" upscale=True as img %}
+    <img class="card-img my-2" src="{{ img.url }}">
+    {% endthumbnail %}
+    {{ post.text }}
+  </p>
+  <ul class="list-inline list-group-horizontal">
+    <li class="list-inline-item">
+      <a href="{% url 'posts:post_detail' post.pk %}">Подробная информация</a>
+    </li>
+    {% if post.group and not group %}
+    <li class="list-inline-item">
+      <a href="{% url 'posts:group_list' post.group.slug %}">
+        Все записи группы "{{ post.group.title }}"
+      </a>
+    </li>
+    {% endif %}
+  </ul>
+</article>

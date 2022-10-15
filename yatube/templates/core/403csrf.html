@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Ошибка доступа!{% endblock %}
+{% block content %}
+  <h1>Ошибка доступа!</h1>
+  <p>
+    Ошибка проверки CSRF.<br>
+    Ключ CSRF отсутствует или не верен. Доступ отклонён.
+  </p>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+Yatube - Об авторе
+{% endblock title %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10 p-5">
+      <div class="card">
+        <div class="card-header">
+          <p><h5>Об авторе</h5></p>
+        </div>
+        <div class="card-body">
+          <p>Здесь предполагается информация об авторе.</p>
+          <p>Писать не хочу, вот вам моя кружка:</p>
+          <div class="d-flex justify-content-center">
+            <img class="border border-2 border-white" src="{% static 'about/author/cup/cup_front.jpg' %}" width="230" height="278" alt="">
+            <img class="border border-2 border-white" src="{% static 'about/author/cup/cup_rear.jpg' %}" width="230" height="278"  alt="">
+            <img class="border border-2 border-white" src="{% static 'about/author/cup/cup_view.jpg' %}" width="230" height="278"  alt="">
+            <img class="border border-2 border-white" src="{% static 'about/author/cup/cup_sign.jpg' %}" width="230" height="278"  alt="">
+          </div>
+          <br>
+          <p class="text-center">
+            © Handmade by 
+            <a href="https://www.twitch.tv/alkalinx/">AlkalinX</a>
+          </p>
+        </div> <!-- card body -->
+      </div> <!-- card -->
+    </div> <!-- col -->
+  </div> <!-- row -->
+</div> <!-- container -->
+{% endblock content %}

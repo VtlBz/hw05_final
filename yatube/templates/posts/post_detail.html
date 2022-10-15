@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+{% load user_filters %}
+{% block title %}
+Пост: {{ post }}
+{% endblock title %}
+{% block content %}
+<div class="container py-5">
+  <div class="row">
+    <aside class="col-12 col-md-3">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          Дата публикации: {{ post.pub_date|date:"d E Y" }}
+        </li>
+        {% if post.group %}
+        <li class="list-group-item">
+          Группа: {{ post.group }}
+          <br>
+          <a href="{% url 'posts:group_list' post.group.slug %}">
+            Все записи группы
+          </a>
+        </li>
+        {% endif %}
+        <li class="list-group-item">
+          Автор: {{ post.author.get_full_name }}
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Всего постов автора: <span >{{ post.author.posts.count }}</span>
+        </li>
+        <li class="list-group-item">
+          <a href="{% url 'posts:profile' post.author.username %}">
+            Все посты пользователя
+          </a>
+        </li>
+        {% if request.user == post.author %}
+        <li class="list-group-item">
+          <a href="{% url 'posts:post_edit' post.pk %}">Редактировать</a>
+        </li>
+        {% endif %}
+      </ul>
+    </aside>
+    <article class="col-12 col-md-9">
+      {% thumbnail post.image image_size crop="center" upscale=True as img %}
+      <img class="card-img my-2" src="{{ img.url }}">
+      {% endthumbnail %}
+      <p>
+        {{ post.text }}
+      </p>
+      {% if user.is_authenticated %}
+      <div class="card my-4">
+        <h5 class="card-header">Добавить комментарий:</h5>
+        <div class="card-body">
+          <form method="post" action="{% url 'posts:add_comment' post.pk %}">
+            {% csrf_token %}
+            <div class="form-group mb-2">
+              <textarea name="text" cols="40" rows="5" class="form-control" required id="id_text"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Отправить</button>
+          </form>
+        </div>
+      </div>
+      {% endif %}
+      {% for comment in comments %}
+      {% include 'includes/comment_frame.html' %}
+      {% endfor %}
+    </article>
+  </div>
+</div>
+{% endblock content %}
