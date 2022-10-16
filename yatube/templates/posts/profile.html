@@ -1,28 +1,51 @@
 {% extends "base.html" %}
 {% block title %}
-Профайл пользователя {{ user_ }}
+Профайл пользователя {{ author }}
 {% endblock title %}
 {% block content %}
 <div class="container py-5">
   <div class="mb-5">
-    <p>
-      <h1>Все посты пользователя {{ user_.get_full_name }}</h1>
-      <h3>Всего постов: {{ user_.posts.count }}</h3>
-    </p>
-
-      {% if follow_flag == 1 %}
+    <p><h1>Все посты пользователя {{ author.username }}</h1></p>
+    <aside class="col-12 col-md-3 mb-2 mt-2 shadow-sm">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <h3>Автор: <b>{{ author.get_full_name }}</b></h3>
+        </li>
+        <li class="list-group-item">
+          Всего постов: {{ author.posts.count }}
+        </li>
+        <li class="list-group-item">
+          Всего подписок: {{ author.follower.count }}
+        </li>
+        <li class="list-group-item">
+          Всего подписчиков: {{ author.following.count }}
+        </li>
+        <li class="list-group-item">
+          
+        </li>
+      </ul>
+    </aside>
+      {% if follow_flag == 0 %}
+      <a
+        class="btn btn-lg btn-primary"
+        href="{% url 'posts:profile_follow' author.username %}" role="button"
+      >
+        Подписаться
+      </a>
+      {% elif follow_flag == 1 %}
       <a
         class="btn btn-lg btn-light"
-        href="{% url 'posts:profile_unfollow' user_.username %}" role="button"
+        href="{% url 'posts:profile_unfollow' author.username %}" role="button"
       >
         Отписаться
       </a>
-      {% elif follow_flag == 0 %}
+      {% comment %} Минутка юмора {% endcomment %}
+      {% elif follow_flag == -1 %}
       <a
-        class="btn btn-lg btn-primary"
-        href="{% url 'posts:profile_follow' user_.username %}" role="button"
+        class="btn btn-lg btn-light"
+        href="{% url 'users:kmp' user.username %}" role="button"
       >
-        Подписаться
+        Отписаться
       </a>
       {% endif %}
 

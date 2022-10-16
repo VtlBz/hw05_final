@@ -7,11 +7,8 @@
   {% include 'includes/switcher.html' %}
   <p><h1>Это главная страница проекта Yatube</h1></p>
   <br>
-  <br>
-  <br>
   {% for post in page_obj %}
     {% include 'includes/post_frame.html' %}
-    {% if not forloop.last %}<hr>{% endif %}
   {% endfor %}
   {% include 'includes/paginator.html' %}
 </div>

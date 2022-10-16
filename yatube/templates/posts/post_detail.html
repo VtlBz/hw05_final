@@ -40,7 +40,7 @@
       </ul>
     </aside>
     <article class="col-12 col-md-9">
-      {% thumbnail post.image image_size crop="center" upscale=True as img %}
+      {% thumbnail post.image '600x200' crop="center" upscale=True as img %}
       <img class="card-img my-2" src="{{ img.url }}">
       {% endthumbnail %}
       <p>

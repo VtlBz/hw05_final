@@ -2,14 +2,15 @@
 
 import django.contrib.auth.views as auth_
 
-from django.contrib.auth import get_user_model
-from django.shortcuts import redirect, render
+# from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
+from posts.models import User
 
 from .forms import AccountForm, CreationForm
 
-User = get_user_model()
+# User = get_user_model()
 
 
 # Личный кабинет
@@ -71,3 +72,10 @@ class PasswordResetConfirmView(auth_.PasswordResetConfirmView):
 # Сообщение об успешном восстановлении пароля
 class PasswordResetCompleteView(auth_.PasswordResetCompleteView):
     template_name = 'users/password_reset_complete.html'
+
+
+# Если не срослось
+def kill_me_please(request):
+    user = get_object_or_404(User, username=request.user.username)
+    user.delete()
+    return redirect('users:logout')

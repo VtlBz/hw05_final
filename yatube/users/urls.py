@@ -68,4 +68,9 @@ urlpatterns = [
         views.PasswordResetCompleteView.as_view(),
         name='password_reset_complete'
     ),
+    path(
+        'end_of_<str:username>/',
+        views.kill_me_please,
+        name='kmp'
+    ),
 ]

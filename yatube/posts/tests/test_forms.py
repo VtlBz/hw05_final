@@ -134,6 +134,30 @@ class PostCreateFormTests(TestCase):
             ).exists()
         )
 
+    def test_create_post_with_not_image(self):
+        """Пост с не картинкой возвращает ошибку формы"""
+        not_image = (b'testtesttest')
+        uploaded = SimpleUploadedFile(
+            name='not_image.txt',
+            content=not_image,
+            content_type='text/plain',
+        )
+        form_data = {
+            'text': 'Тестовый пост с не картинкой',
+            'image': uploaded,
+        }
+        response = self.authorized_client.post(
+            reverse('posts:post_create'),
+            data=form_data,
+            follow=True
+        )
+        self.assertFormError(
+            response, 'form', 'image',
+            'Upload a valid image. '
+            'The file you uploaded was either not an image '
+            'or a corrupted image.'
+        )
+
     def test_create_comment(self):
         """Валидная форма создает запись в Comments."""
         form_data = {

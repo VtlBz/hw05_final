@@ -10,8 +10,6 @@ from .forms import CommentForm, PostForm
 from .models import Follow, Group, Post, User
 from .utils import paginator_
 
-IMAGE_SIZE = settings.DEFAULT_IMAGE_SIZE
-
 
 @cache_page(settings.CASHE_TIMEOUT, key_prefix='index_page')
 def index(request):
@@ -21,7 +19,6 @@ def index(request):
     page_obj = paginator_(request, posts_list)
     context = {
         'page_obj': page_obj,
-        'image_size': IMAGE_SIZE
     }
     return render(request, template, context)
 
@@ -35,7 +32,6 @@ def group_posts(request, slug):
     context = {
         'group': group,
         'page_obj': page_obj,
-        'image_size': IMAGE_SIZE
     }
     return render(request, template, context)
 
@@ -44,26 +40,26 @@ def profile(request, username):
     template = 'posts/profile.html'
     author = get_object_or_404(User, username=username)
     # follow_flag:
-    # (-1) - Подписка не может существовать
     # ( 0) - Подписки нет
     # ( 1) - Подписка существует
-    follow_flag = -1
+    # (-1) - Подписка не может существовать
+    follow_flag = 0
     if request.user.is_authenticated:
         user = get_object_or_404(User, username=request.user.username)
         follow_obj = Follow.objects.filter(user=user, author=author)
-        if not follow_obj.exists() and author != user:
-            follow_flag = 0
-        elif follow_obj.exists() and author != user:
+        # Задача конструкции выпиливать кнопку подписки для самого себя
+        if follow_obj.exists():
             follow_flag = 1
+        elif author == user:
+            follow_flag = -1
     author_posts = author.posts.select_related(
         'group').all()
     page_obj = paginator_(request, author_posts)
 
     context = {
-        'user_': author,
+        'author': author,
         'page_obj': page_obj,
         'follow_flag': follow_flag,
-        'image_size': IMAGE_SIZE
     }
     return render(request, template, context)
 
@@ -80,7 +76,6 @@ def post_detail(request, post_id):
     context = {
         'post': post,
         'comments': comments,
-        'image_size': IMAGE_SIZE,
         'form': form
     }
 
@@ -161,7 +156,6 @@ def follow_index(request):
     page_obj = paginator_(request, post_list)
     context = {
         'page_obj': page_obj,
-        'image_size': IMAGE_SIZE
     }
     return render(request, template, context)
 
@@ -170,10 +164,12 @@ def follow_index(request):
 def profile_follow(request, username):
     author = get_object_or_404(User, username=username)
     user = get_object_or_404(User, username=request.user.username)
-    follow_obj = Follow.objects.filter(user=user, author=author)
-    can_follow = not follow_obj.exists() and user != author
-    if can_follow:
-        Follow.objects.create(user=user, author=author)
+    if user != author:
+        Follow.objects.get_or_create(user=user, author=author)
+    # follow_obj = Follow.objects.filter(user=user, author=author)
+    # can_follow = not follow_obj.exists() and user != author
+    # if can_follow:
+    #     Follow.objects.create(user=user, author=author)
     return redirect('posts:profile', username=author.username)
 
 
@@ -182,7 +178,5 @@ def profile_unfollow(request, username):
     author = get_object_or_404(User, username=username)
     user = get_object_or_404(User, username=request.user.username)
     follow_obj = Follow.objects.filter(user=user, author=author)
-    can_unfollow = follow_obj.exists()
-    if can_unfollow:
-        follow_obj.delete()
+    follow_obj.delete()
     return redirect('posts:profile', username=author.username)

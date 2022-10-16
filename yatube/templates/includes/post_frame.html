@@ -1,29 +1,50 @@
 {% load thumbnail %}
 <article>
-  <ul>
-    <li>
-      Автор: {{ post.author.get_full_name }}
-    </li>
-    <li>
-      Дата публикации: {{ post.pub_date|date:"d E Y" }}
-    </li>
-  </ul>
-  <p>
-    {% thumbnail post.image image_size crop="center" upscale=True as img %}
-    <img class="card-img my-2" src="{{ img.url }}">
-    {% endthumbnail %}
-    {{ post.text }}
-  </p>
-  <ul class="list-inline list-group-horizontal">
-    <li class="list-inline-item">
-      <a href="{% url 'posts:post_detail' post.pk %}">Подробная информация</a>
-    </li>
-    {% if post.group and not group %}
-    <li class="list-inline-item">
-      <a href="{% url 'posts:group_list' post.group.slug %}">
-        Все записи группы "{{ post.group.title }}"
-      </a>
-    </li>
-    {% endif %}
-  </ul>
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-10 p-5">
+        <div class="card">
+          <div class="card-header">
+            <ul>
+              <li>
+                Автор: <a href="{% url 'posts:profile' post.author.username %}">{{ post.author.get_full_name }}</a>
+              </li>
+              <li>
+                Дата публикации: {{ post.pub_date|date:"d E Y" }}
+              </li>
+            </ul>
+          </div>
+          <div class="card-body">
+            {% thumbnail post.image '600x200' crop="center" upscale=True as img %}
+            <img class="card-img my-2" src="{{ img.url }}">
+            {% endthumbnail %}
+            <p class="card-text">
+              {{ post.text }}
+            </p>
+            <hr>
+            {% if post.group and not group %}
+            <p>
+              <a
+              href="{% url 'posts:group_list' post.group.slug %}"
+              >
+                # Все записи группы "{{ post.group.title }}"
+              </a>
+            </p>
+            {% endif %}
+            <p>
+              Комментариев: {{ post.comments.count }}
+            </p>
+            <br>
+            <a
+            class="btn btn-lg btn-primary"
+            href="{% url 'posts:post_detail' post.pk %}"
+            role="button"
+            >
+              Подробная информация
+            </a>
+          </div> <!-- card body -->
+        </div> <!-- card -->
+      </div> <!-- col -->
+    </div> <!-- row -->
+  </div> <!-- container -->
 </article>
