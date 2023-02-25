@@ -12,7 +12,9 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+import sentry_sdk
 from dotenv import load_dotenv
+from sentry_sdk.integrations.django import DjangoIntegration
 
 DEFAULT_TOKEN: str = 'DEFAULT_SECRET_KEY'
 DEFAULT_HOSTS: str = '127.0.0.1 localhost [::1] testserver'
@@ -93,8 +95,12 @@ WSGI_APPLICATION = 'yatube.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT')
     }
 }
 
@@ -143,9 +149,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static'),
+# ]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -163,7 +169,16 @@ CACHES = {
     }
 }
 
+# Monitoring service Sentry
+
+SENTRY_DSN_KEY = os.getenv('SENTRY_DSN_KEY')
+sentry_sdk.init(
+    dsn=SENTRY_DSN_KEY,
+    integrations=[DjangoIntegration()],
+)
+
 # Project constants
+
 POSTS_PER_PAGE: int = 10
 CASHE_TIMEOUT: int = 20
 DEFAULT_IMAGE_SIZE: str = '600x200'
