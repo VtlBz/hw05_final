@@ -1,3 +1,3 @@
-# hw05_final
+# Платформа для блогов
 
-[![CI](https://github.com/yandex-praktikum/hw05_final/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/yandex-praktikum/hw05_final/actions/workflows/python-app.yml)
+Использован фреймворк Django, тестирование pytest, автоматизация деплоя через GitHub Actions.
